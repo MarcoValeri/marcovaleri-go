@@ -27,7 +27,7 @@ func AdminLogin() {
 		}
 
 		// Session authentication
-		session, errSession := store.Get(r, "session-authentication")
+		session, errSession := store.Get(r, "session-user-admin-authentication")
 		if errSession != nil {
 			fmt.Println("Error on session-authentication", errSession)
 		}
