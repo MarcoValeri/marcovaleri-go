@@ -10,6 +10,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func DatabaseConnection() *sql.DB {
+	flag := "local"
+	if flag == "local" {
+		return databaseConnectionLocal()
+	}
+	return databaseConnectionLocal()
+}
+
 func databaseConnectionLocal() *sql.DB {
 	err := godotenv.Load(".env")
 	if err != nil {

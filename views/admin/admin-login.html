@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow" />
     <link rel="stylesheet" href="public/css/main.css">
-    <title>Marco Valeri login</title>
+    <title>{{ .PageTitle }}</title>
 </head>
 <body>
     <div>
         <form method="POST">
             <div>
                 <input type="text" name="admin-user-email" />
+                <span>{{ .EmailValidation }}</span>
             </div>
             <div>
                 <input type="password" name="admin-user-password" />
+                <span>{{ .PasswordValidation }}</span>
             </div>
             <div>
                 <input type="submit" name="admin-user-login" value="Login" />

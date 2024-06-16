@@ -3,6 +3,8 @@ package admincontrollers
 import (
 	"fmt"
 	"html/template"
+	"marcovaleri/models"
+	"marcovaleri/util"
 	"net/http"
 
 	"github.com/gorilla/securecookie"
@@ -10,6 +12,7 @@ import (
 )
 
 type LoginValidation struct {
+	PageTitle          string
 	EmailValidation    string
 	PasswordValidation string
 }
@@ -21,7 +24,8 @@ func AdminLogin() {
 	tmpl := template.Must(template.ParseFiles("./views/admin/admin-login.html"))
 	http.HandleFunc("/admin/login", func(w http.ResponseWriter, r *http.Request) {
 
-		setLoginValidation := LoginValidation{
+		data := LoginValidation{
+			PageTitle:          "Admin Login",
 			EmailValidation:    "",
 			PasswordValidation: "",
 		}
@@ -40,18 +44,39 @@ func AdminLogin() {
 		getAdminUserLogin := r.FormValue("admin-user-login")
 
 		if len(getAdminUserLogin) > 0 {
-			if getAdminUserEmail == "info@marcovaleri.net" && getAdminUserPassword == "1234" {
+
+			// Email validation
+			if !util.FormEmailInput(getAdminUserEmail) {
+				data.EmailValidation = "Error: email format is not valid"
+				session.Values["admin-user-authentication"] = false
+				session.Save(r, w)
+			}
+			if !util.FormEmailLengthInput(getAdminUserEmail) {
+				data.EmailValidation = "Error: email format is not valid"
+				session.Values["admin-user-authentication"] = false
+				session.Save(r, w)
+			}
+
+			// Password validation
+			if !util.FormPasswordInput(getAdminUserPassword) {
+				data.PasswordValidation = "Error: password is not valid"
+				session.Values["admin-user-authentication"] = false
+				session.Save(r, w)
+			}
+
+			// Form validation
+			if models.UserAdminLogin(getAdminUserEmail, getAdminUserPassword) {
 				session.Values["admin-user-authentication"] = true
 				session.Save(r, w)
 				http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
 			} else {
-				setLoginValidation.EmailValidation = "Error: email and password are not valid"
-				setLoginValidation.PasswordValidation = "Error: email and password are not valid"
+				data.EmailValidation = "Error: email and password are not valid"
+				data.PasswordValidation = "Error: email and password are not valid"
 				session.Values["admin-user-authentication"] = false
 				session.Save(r, w)
 			}
 		}
 
-		tmpl.Execute(w, nil)
+		tmpl.Execute(w, data)
 	})
 }
