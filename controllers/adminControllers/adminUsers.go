@@ -66,7 +66,6 @@ func AdminUserAdd() {
 
 			// Check if the form has been submitted
 			if getAdminUserSubmit == "Add new admin user" {
-				fmt.Println("Statement 1")
 				// Email validation
 				if util.FormEmailInput(getAdminUserEmail) {
 					data.EmailError = ""
