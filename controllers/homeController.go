@@ -15,7 +15,11 @@ var homeTemplate *template.Template
 
 // Parse the template once at startup
 func init() {
-	homeTemplate = template.Must(template.ParseFiles("./views/templates/base.html", "./views/home.html"))
+	var err error
+	homeTemplate, err = template.ParseFiles("./views/templates/base.html", "./views/home.html")
+	if err != nil {
+		log.Fatal("Error parsing template:", err)
+	}
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -24,30 +28,30 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl, err := template.ParseFiles("./views/home.html")
-	if err != nil {
-		http.Error(w, "Error parsing temlate", http.StatusInternalServerError)
-		log.Println("Template parsing error:", err)
-	}
+	tmpl := homeTemplate
 
 	data := PageData{
 		PageTitle: "Marco Valeri",
 	}
 
-	err = tmpl.Execute(w, data)
+	err := tmpl.Execute(w, data)
 	if err != nil {
-		http.Error(w, "Error executing template", http.StatusInternalServerError)
-		log.Println("Template execution error:", err)
-		return
+		log.Fatal("Error parsing template:", err)
 	}
 }
 
-// func Home() {
-// 	tmpl :=
-// 		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-// 			data := PageData{
-// 				PageTitle: "Marco Valeri",
-// 			}
-// 			tmpl.Execute(w, data)
-// 		})
+// func NotFound(w http.ResponseWriter, r *http.Request) {
+// 	renderErrorPage(w, http.StatusNotFound, "Page not found")
+// }
+
+// func renderErrorPage(w http.ResponseWriter, statusCode int, message string) {
+// 	w.WriteHeader(statusCode)
+// 	data := PageData{
+// 		PageTitle: "Error",
+// 	}
+// 	err := errorTemplate.Execute(w, data)
+// 	if err != nil {
+// 		// Fallback to http.Error in case of error rendering the error page
+// 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+// 	}
 // }

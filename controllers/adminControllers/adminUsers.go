@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"marcovaleri/models"
+	"marcovaleri/session"
 	"marcovaleri/util"
 	"net/http"
 )
@@ -20,7 +21,7 @@ func AdminUsers() {
 	tmpl := template.Must(template.ParseFiles("./views/admin/templates/baseAdmin.html", "./views/admin/admin-users.html"))
 	http.HandleFunc("/admin/admin-users", func(w http.ResponseWriter, r *http.Request) {
 
-		session, errSession := store.Get(r, "session-user-admin-authentication")
+		session, errSession := session.Store.Get(r, "session-user-admin-authentication")
 		if errSession != nil {
 			fmt.Println("Error on session-authentication:", errSession)
 		}
@@ -37,7 +38,7 @@ func AdminUserAdd() {
 	tmpl := template.Must(template.ParseFiles("./views/admin/templates/baseAdmin.html", "./views/admin/admin-user-add.html"))
 	http.HandleFunc("/admin/admin-user-add", func(w http.ResponseWriter, r *http.Request) {
 
-		session, errSession := store.Get(r, "session-user-admin-authentication")
+		session, errSession := session.Store.Get(r, "session-user-admin-authentication")
 		if errSession != nil {
 			fmt.Println("Error on session-authentication:", errSession)
 		}
