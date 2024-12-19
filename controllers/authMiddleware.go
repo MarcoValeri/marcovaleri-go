@@ -10,7 +10,7 @@ func AuthMiddlewareController(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, errSession := session.Store.Get(r, "session-user-admin-authentication")
 		if errSession != nil {
-			fmt.Println("Error 1 on session-authentication:", errSession)
+			fmt.Println("Error AuthMiddlewareController on session-authentication:", errSession)
 			http.Redirect(w, r, "/admin/login", http.StatusSeeOther) // Redirect to login on error
 			return
 		}
